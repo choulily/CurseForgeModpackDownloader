@@ -1,4 +1,5 @@
 import json
+from retrying import retry
 from urllib.parse import quote, urlencode
 from urllib.request import Request, urlopen
 
@@ -35,7 +36,8 @@ class Requester:
 
     def __init__(self, factory: 'Factory'):
         self.__factory = factory
-
+        
+    @retry(stop_max_attempt_number=3)
     def get(self, url: str, params: Dict[str, Any] = None) -> Response:
         """
         Request using get method.
